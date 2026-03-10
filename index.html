@@ -269,6 +269,37 @@ main { padding: 20px 16px 80px; }
   .nav { padding-bottom: env(safe-area-inset-bottom); height: calc(62px + env(safe-area-inset-bottom)); }
   main { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
 }
+  /* ── HEADER SETTINGS BUTTON ── */
+.header-settings-btn { background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.18); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.8); transition: all 0.15s; flex-shrink: 0; }
+.header-settings-btn:hover { background: rgba(255,255,255,0.18); color: #fff; }
+.header-settings-btn svg { width: 17px; height: 17px; }
+
+/* ── SETTINGS DRAWER ── */
+.settings-drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(17,24,39,0.4); backdrop-filter: blur(2px); z-index: 500; }
+.settings-drawer-overlay.open { display: block; }
+.settings-drawer { position: fixed; top: 0; right: -340px; width: 320px; max-width: 92vw; height: 100vh; background: var(--white); box-shadow: -8px 0 40px rgba(0,0,0,0.12); z-index: 501; overflow-y: auto; transition: right 0.28s cubic-bezier(0.34,1.1,0.64,1); display: flex; flex-direction: column; }
+.settings-drawer.open { right: 0; }
+.drawer-header { background: var(--navy); padding: 20px 20px 24px; flex-shrink: 0; position: relative; }
+.drawer-close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.1); border: none; border-radius: 8px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.7); }
+.drawer-close:hover { background: rgba(255,255,255,0.18); color: #fff; }
+.drawer-close svg { width: 15px; height: 15px; }
+.drawer-profile-avatar { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 20px; color: #fff; margin-bottom: 12px; }
+.drawer-profile-name { font-family: 'DM Serif Display', serif; font-size: 20px; color: #fff; }
+.drawer-profile-sub { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 3px; }
+.drawer-body { padding: 16px; flex: 1; }
+.drawer-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin: 16px 0 8px; }
+.drawer-section-label:first-child { margin-top: 0; }
+.drawer-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 4px; }
+.drawer-row { display: flex; align-items: center; gap: 10px; padding: 11px 14px; }
+.drawer-row + .drawer-row { border-top: 1px solid var(--border-light); }
+.drawer-row-icon { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.drawer-row-icon svg { width: 14px; height: 14px; }
+.drawer-row-label { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; }
+.drawer-input { border: 1.5px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 13px; font-weight: 500; background: var(--white); color: var(--text); outline: none; transition: border-color 0.15s; font-family: 'DM Sans', sans-serif; }
+.drawer-input:focus { border-color: var(--navy); }
+.drawer-select { border: 1.5px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 12px; font-weight: 500; background: var(--white); color: var(--text); outline: none; -webkit-appearance: none; font-family: 'DM Sans', sans-serif; }
+.drawer-chevron { width: 14px; height: 14px; color: var(--text-muted); flex-shrink: 0; }
+.drawer-footer { padding: 16px; border-top: 1px solid var(--border-light); flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -276,8 +307,14 @@ main { padding: 20px 16px 80px; }
 <header class="header">
   <div class="logo">Foreman<sup>Pro</sup></div>
   <div class="header-right">
-    <span class="header-name">Mike Johnson</span>
-    <div class="avatar">MJ</div>
+    <span class="header-name" id="header-name">Mike Johnson</span>
+    <div class="avatar" id="header-avatar">MJ</div>
+    <button class="header-settings-btn" onclick="openSettingsDrawer()" title="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+      </svg>
+    </button>
   </div>
 </header>
 
@@ -831,6 +868,264 @@ function markPaid(id) { data.invoices.find(i=>i.id===id).status='Paid'; renderIn
 function deleteInvoice(id) { if(confirm('Remove this invoice?')){data.invoices=data.invoices.filter(i=>i.id!==id);renderInvoices();updateDashboard();showToast('Invoice removed');} }
 
 updateDashboard();
+</script>
+  <!-- PASTE THIS ENTIRE BLOCK just before your closing </body> tag -->
+
+<!-- Settings Overlay -->
+<div class="settings-drawer-overlay" id="settings-overlay" onclick="closeSettingsDrawer()"></div>
+
+<!-- Settings Drawer -->
+<div class="settings-drawer" id="settings-drawer">
+
+  <div class="drawer-header">
+    <button class="drawer-close" onclick="closeSettingsDrawer()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="drawer-profile-avatar" id="drawer-avatar">MJ</div>
+    <div class="drawer-profile-name" id="drawer-name">Mike Johnson</div>
+    <div class="drawer-profile-sub" id="drawer-sub">General Contractor · Miami, FL</div>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- Profile -->
+    <div class="drawer-section-label">Profile</div>
+    <div class="drawer-card">
+      <div class="drawer-row">
+        <div class="drawer-row-icon" style="background:var(--accent-light);color:var(--navy)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="drawer-row-label">Full Name</div>
+        <input class="drawer-input" id="set-name" value="Mike Johnson" style="width:130px" placeholder="Your name" oninput="applyProfileChanges()">
+      </div>
+      <div class="drawer-row">
+        <div class="drawer-row-icon" style="background:var(--blue-bg);color:var(--blue)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+        </div>
+        <div class="drawer-row-label">Job Title</div>
+        <input class="drawer-input" id="set-title" value="General Contractor" style="width:130px" placeholder="Your title" oninput="applyProfileChanges()">
+      </div>
+      <div class="drawer-row">
+        <div class="drawer-row-icon" style="background:var(--green-bg);color:var(--green)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="drawer-row-label">Location</div>
+        <input class="drawer-input" id="set-location" value="Miami, FL" style="width:130px" placeholder="City, State" oninput="applyProfileChanges()">
+      </div>
+      <div class="drawer-row">
+        <div class="drawer-row-icon" style="background:var(--amber-bg);color:var(--amber)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16z"/></svg>
+        </div>
+        <div class="drawer-row-label">Phone</div>
+        <input class="drawer-input" id="set-phone" style="width:130px" placeholder="(305) 555-0100" type="tel">
+      </div>
+      <div class="drawer-row">
+        <div class="drawer-row-icon" style="background:var(--red-bg);color:var(--red)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="drawer-row-label">Email</div>
+        <input class="drawer-input" id="set-email" style="width:130px" placeholder="you@email.com" type="email">
+      </div>
+    </div>
+
+    <!-- Company -->
+    <div class="drawer-section-label">Company</div>
+    <div class="drawer-card">
+      <div class="drawer-row">
+        <div class="drawer-row-icon" style="background:var(--accent-light);color:var(--navy)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        </div>
+        <div class="drawer-row-label">Company Name</div>
+        <input class="drawer-input" id="set-company" style="width:130px" placeholder="Your LLC">
+      </div>
+      <div class="drawer-row">
+        <div class="drawer-row-icon" style="background:var(--green-bg);color:var(--green)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div class="drawer-row-label">License #</div>
+        <input class="drawer-input" id="set-license" style="width:130px" placeholder="CGC123456">
+      </div>
+      <div class="drawer-row">
+        <div class="drawer-row-icon" style="background:var(--amber-bg);color:var(--amber)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="drawer-row-label">Trade</div>
+        <select class="drawer-select" id="set-trade">
+          <option>General Contractor</option>
+          <option>Roofing</option>
+          <option>Plumbing</option>
+          <option>Electrical</option>
+          <option>HVAC</option>
+          <option>Framing / Carpentry</option>
+          <option>Flooring</option>
+          <option>Painting</option>
+          <option>Concrete / Masonry</option>
+          <option>Commercial Contractor</option>
+          <option>Remodeler</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Preferences -->
+    <div class="drawer-section-label">Preferences</div>
+    <div class="drawer-card">
+      <div class="drawer-row">
+        <div class="drawer-row-icon" style="background:#f3f0ff;color:#7c3aed">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="drawer-row-label">Default Margin</div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <input class="drawer-input" id="set-margin" value="20" type="number" min="0" max="100" style="width:54px;text-align:center">
+          <span style="font-size:12px;color:var(--text-muted)">%</span>
+        </div>
+      </div>
+      <div class="drawer-row">
+        <div class="drawer-row-icon" style="background:var(--blue-bg);color:var(--blue)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="drawer-row-label">Payment Terms</div>
+        <select class="drawer-select" id="set-terms">
+          <option>Net 15</option>
+          <option selected>Net 30</option>
+          <option>Net 45</option>
+          <option>Due on receipt</option>
+        </select>
+      </div>
+      <div class="drawer-row">
+        <div class="drawer-row-icon" style="background:var(--green-bg);color:var(--green)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        </div>
+        <div class="drawer-row-label">Currency</div>
+        <select class="drawer-select" id="set-currency">
+          <option selected>USD ($)</option>
+          <option>CAD ($)</option>
+          <option>EUR (€)</option>
+          <option>GBP (£)</option>
+          <option>MXN ($)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Data -->
+    <div class="drawer-section-label">Data</div>
+    <div class="drawer-card">
+      <div class="drawer-row" style="cursor:pointer" onclick="exportData()">
+        <div class="drawer-row-icon" style="background:var(--green-bg);color:var(--green)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <div class="drawer-row-label">Export Data Backup</div>
+        <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="drawer-row" style="cursor:pointer" onclick="confirmClearData()">
+        <div class="drawer-row-icon" style="background:var(--red-bg);color:var(--red)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </div>
+        <div class="drawer-row-label" style="color:var(--red)">Clear All Data</div>
+        <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:20px 0 8px;color:var(--text-muted);font-size:11px">
+      Foreman Pro v1.0 &nbsp;·&nbsp; Built for contractors
+    </div>
+  </div>
+
+  <div class="drawer-footer">
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveSettingsDrawer()">Save Changes</button>
+  </div>
+
+</div>
+
+<script>
+function openSettingsDrawer() {
+  loadSettingsIntoDrawer();
+  document.getElementById('settings-overlay').classList.add('open');
+  document.getElementById('settings-drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSettingsDrawer() {
+  document.getElementById('settings-overlay').classList.remove('open');
+  document.getElementById('settings-drawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function loadSettingsIntoDrawer() {
+  try {
+    const s = JSON.parse(localStorage.getItem('foreman-settings') || '{}');
+    if (s.name)     document.getElementById('set-name').value = s.name;
+    if (s.title)    document.getElementById('set-title').value = s.title;
+    if (s.location) document.getElementById('set-location').value = s.location;
+    if (s.phone)    document.getElementById('set-phone').value = s.phone;
+    if (s.email)    document.getElementById('set-email').value = s.email;
+    if (s.company)  document.getElementById('set-company').value = s.company;
+    if (s.license)  document.getElementById('set-license').value = s.license;
+    if (s.trade)    document.getElementById('set-trade').value = s.trade;
+    if (s.margin)   document.getElementById('set-margin').value = s.margin;
+    if (s.terms)    document.getElementById('set-terms').value = s.terms;
+    if (s.currency) document.getElementById('set-currency').value = s.currency;
+  } catch(e) {}
+}
+function applyProfileChanges() {
+  const name = document.getElementById('set-name').value.trim() || 'User';
+  const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+  document.getElementById('header-name').textContent = name;
+  document.getElementById('header-avatar').textContent = initials;
+  document.getElementById('drawer-avatar').textContent = initials;
+  document.getElementById('drawer-name').textContent = name;
+  const title = document.getElementById('set-title').value || '';
+  const loc = document.getElementById('set-location').value || '';
+  document.getElementById('drawer-sub').textContent = [title, loc].filter(Boolean).join(' · ');
+  const welcome = document.querySelector('.welcome-name');
+  if (welcome) welcome.textContent = 'Good morning, ' + name.split(' ')[0] + '.';
+}
+function saveSettingsDrawer() {
+  const s = {
+    name:     document.getElementById('set-name').value.trim(),
+    title:    document.getElementById('set-title').value.trim(),
+    location: document.getElementById('set-location').value.trim(),
+    phone:    document.getElementById('set-phone').value.trim(),
+    email:    document.getElementById('set-email').value.trim(),
+    company:  document.getElementById('set-company').value.trim(),
+    license:  document.getElementById('set-license').value.trim(),
+    trade:    document.getElementById('set-trade').value,
+    margin:   document.getElementById('set-margin').value,
+    terms:    document.getElementById('set-terms').value,
+    currency: document.getElementById('set-currency').value,
+  };
+  try { localStorage.setItem('foreman-settings', JSON.stringify(s)); } catch(e) {}
+  applyProfileChanges();
+  closeSettingsDrawer();
+  showToast('Settings saved');
+}
+function exportData() {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'foreman-backup-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  showToast('Data exported');
+}
+function confirmClearData() {
+  if (confirm('This will delete ALL your leads, jobs, estimates and invoices. Cannot be undone. Are you sure?')) {
+    localStorage.removeItem('foreman-data');
+    location.reload();
+  }
+}
+// Restore saved settings on page load
+(function() {
+  try {
+    const s = JSON.parse(localStorage.getItem('foreman-settings') || '{}');
+    if (s.name) {
+      const initials = s.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('header-name').textContent = s.name;
+      document.getElementById('header-avatar').textContent = initials;
+      document.getElementById('drawer-avatar').textContent = initials;
+      document.getElementById('drawer-name').textContent = s.name;
+      document.getElementById('drawer-sub').textContent = [s.title, s.location].filter(Boolean).join(' · ');
+      const welcome = document.querySelector('.welcome-name');
+      if (welcome) welcome.textContent = 'Good morning, ' + s.name.split(' ')[0] + '.';
+    }
+  } catch(e) {}
+})();
 </script>
 </body>
 </html>
